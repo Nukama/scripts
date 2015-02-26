@@ -15,10 +15,10 @@ esac
 
 And insert it into git-filter-branch-git-author-committer-name-email-case.sh.
 
-Then convert repository to desired format (specified in trac2rst.sh)
+Then convert repository to desired format (specified in ConvertFromTrac.sh)
 '''
-~/repositories/github.com/Nukama/scripts/git-filter-branch-rm-files.sh
-~/repositories/github.com/Nukama/scripts/git-filter-branch-trac2rst.sh
+~/repositories/github.com/Nukama/scripts/git-filter-branch-RemoveTracFiles.sh
+~/repositories/github.com/Nukama/scripts/git-filter-branch-ConvertFromTrac.sh
 ~/repositories/github.com/Nukama/scripts/git-filter-branch-git-author-committer-name-email-case.sh
 git remote set-url origin git@github.com:USERNAME/USERNAME.github.io.wiki.git
 git push -f
