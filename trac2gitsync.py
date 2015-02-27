@@ -25,10 +25,12 @@ WIKIPATH = '/home/user/src/wiki'
 
 env = trac.env.Environment(ENVIRONMENT)
 
+git = "/ust/bin/git"
+
 def trac2html(name, text):
     req = trac.test.Mock(
-        href=trac.web.href.Href('/'),
-        abs_href=trac.web.href.Href('http://www.qubes-os.org/wiki/'),
+        href=trac.web.href.Href('/wiki/'),
+        abs_href=trac.web.href.Href('http://wiki.qubes-os.org/'),
         chrome={},
         session={},
         authname='wikiexporter',
@@ -94,9 +96,27 @@ class GitSync(object):
             author = u'(unknown)'
 
         if date:
-            self.git('commit', '--author={0} <>'.format(author.encode('utf-8')), '-m', message.encode('utf-8'), '--date', date)
-        else:
-            self.git('commit', '--author={0} <>'.format(author.encode('utf-8')), '-m', message.encode('utf-8'))
+            try:
+                self.git('commit', '-m', message.encode('utf-8'), 
+                                      env={"GIT_AUTHOR_DATE": date,
+                                           "GIT_AUTHOR": self.git_checkmailmap(author),
+                                           #"GIT_AUTHOR_EMAIL": aM,
+                                           "GIT_COMMITTER_DATE": date,
+                                           "GIT_COMMITTER": self.git_checkmailmap(author),
+                                           #"GIT_COMMITTER_EMAIL": cM
+                                           })
+            #self.git('commit', '--author={0} <>'.format(author.encode('utf-8')), '-m', message.encode('utf-8'), '--date', date)
+            # trying to circumvent strange unicode-encoded file name problems:
+            except subprocess.CalledProcessError:
+                [subprocess.check_call([git, "add", x], cwd=target) for x in os.listdir(target)]
+                subprocess.check_call(git, "commit", "-m", message.encode('utf-8'),
+                                      env={"GIT_AUTHOR_DATE": date,
+                                           "GIT_AUTHOR_NAME": self.git_checkmailmap(author),
+                                           #"GIT_AUTHOR_EMAIL": aM,
+                                           "GIT_COMMITTER_DATE": date,
+                                           "GIT_COMMITTER_NAME": self.git_checkmailmap(author),
+                                           #"GIT_COMMITTER_EMAIL": cM
+                                           })
 
     def git_reset(self):
         self.git('reset', '--hard', 'HEAD')
@@ -121,6 +141,43 @@ class GitSync(object):
         self.lockfd.close()
         del self.lockfd
 
+def read_database(db):
+    # from Trac2Gollum
+    conn = sqlite3.connect('/home/user/src/wiki/db/trac.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT name, version, time, author, text, comment FROM wiki WHERE author != "trac" ORDER BY time, version;')
+    pages = [x[0] for x in db.execute('select name from wiki where author != "trac" group by name', []).fetchall()]
+    for page in pages:
+        for revision in db.execute('select * from wiki where name is ? order by version', [page]).fetchall():
+            user, email = format_user(revision)
+            yield {
+                "page": format_page(revision[0]),
+                "version": revision[1],
+                "time": format_time(revision[2]),
+                "username": user,
+                "useremail": email,
+                "ip": revision[4],
+                "text": revision[5],
+                "comment": format_comment(revision),
+            }
+
+def getgitenv(user, date):
+    env = ''
+    elems = re.compile('(.*?)\s+<(.*)>').match(user)
+    if elems:
+        env += 'export GIT_AUTHOR_NAME="%s" ;' % elems.group(1)
+        env += 'export GIT_COMMITER_NAME="%s" ;' % elems.group(1)
+        env += 'export GIT_AUTHOR_EMAIL="%s" ;' % elems.group(2)
+        env += 'export GIT_COMMITER_EMAIL="%s" ;' % elems.group(2)
+    else:
+        env += 'export GIT_AUTHOR_NAME="%s" ;' % user
+        env += 'export GIT_COMMITER_NAME="%s" ;' % user
+        env += 'export GIT_AUTHOR_EMAIL= ;'
+        env += 'export GIT_COMMITER_EMAIL= ;'
+
+        env += 'export GIT_AUTHOR_DATE="%s" ;' % date
+        env += 'export GIT_COMMITTER_DATE="%s" ;' % date
+    return env 
 
 def main():
     gitsync = GitSync()

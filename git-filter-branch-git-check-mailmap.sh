@@ -6,5 +6,6 @@ git filter-branch -f -d /dev/shm/git --commit-filter '
     R="${R##* <}"
     GIT_AUTHOR_EMAIL="${R%>}"
     GIT_COMMITTER_EMAIL="${R%>}"
+    GIT_COMMITTER_DATE=$GIT_AUTHOR_DATE
     git commit-tree "$@"
 ' -- --all
