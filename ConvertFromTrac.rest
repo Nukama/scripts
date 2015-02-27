@@ -2,7 +2,7 @@
 
     git clone git://gitorious.org/qubes-os/wiki ~/repositories/gitorious.org/qubes-os/wiki
     cd ~/repositories/gitorious.org/qubes-os/wiki
-    git shortlog -s -n
+    git shortlog -s -n -e
 
 Create a mapping between each trac user "example" and "Example Name <name@example.com>" 
 for git check-mailmap in `.mailmap`__ and use `git-filter-branch-git-check-mailmap.sh`__,
@@ -19,13 +19,24 @@ And insert it into git-filter-branch-git-author-committer-name-email-case.sh.
 Then convert repository to desired format (specified in ConvertFromTrac.sh)
 ::
 
+    # In case of a working trac.db:
+    python ~/repositories/github.com/Nukama/scripts/trac2gitsync.py
+    
+    # Only with a Trac2Git repository:
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-RemoveTracFiles.sh
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-ConvertFromTrac.sh
+    
+    # Fix commiter and author names/emails:
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-git-author-committer-name-email-case.sh
-# or
+    # Or:
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-git-check-mailmap.sh
+    
+    # Then push to remote repository:
     git remote set-url origin git@github.com:USERNAME/USERNAME.github.io.wiki.git
+    # Or:
+    git remote add-url origin git@github.com:USERNAME/USERNAME.github.io.wiki.git
     git push -f
+
 
 __ https://github.com/Nukama/scripts/blob/master/.mailmap
 __ https://github.com/Nukama/scripts/blob/master/git-filter-branch-git-check-mailmap.sh
