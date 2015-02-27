@@ -5,7 +5,8 @@
     git shortlog -s -n
 
 Create a mapping between each trac user "example" and "Example Name <name@example.com>" 
-for git check-mailmap or this case statement:
+for git check-mailmap in `.mailmap`__ and use `git-filter-branch-git-check-mailmap.sh`__,
+or in a case statement:
 ::
 
     case ${GIT_AUTHOR_NAME} in
@@ -21,5 +22,10 @@ Then convert repository to desired format (specified in ConvertFromTrac.sh)
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-RemoveTracFiles.sh
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-ConvertFromTrac.sh
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-git-author-committer-name-email-case.sh
+# or
+    ~/repositories/github.com/Nukama/scripts/git-filter-branch-git-check-mailmap.sh
     git remote set-url origin git@github.com:USERNAME/USERNAME.github.io.wiki.git
     git push -f
+
+__ https://github.com/Nukama/scripts/blob/master/.mailmap
+__ https://github.com/Nukama/scripts/blob/master/git-filter-branch-git-check-mailmap.sh
