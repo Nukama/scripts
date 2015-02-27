@@ -1,5 +1,4 @@
 #!/usr/bin/python -O
-# Author: Wojtek Porczyk <woju@invisiblethingslab.com>
 
 from __future__ import print_function
 
