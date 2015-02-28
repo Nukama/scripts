@@ -1,3 +1,7 @@
+=============================================
+Convert from TracWiki to git (jekyll, gollum)
+=============================================
+
 ::
 
     git clone git://gitorious.org/qubes-os/wiki ~/repositories/gitorious.org/qubes-os/wiki
@@ -22,7 +26,7 @@ Then convert repository to desired format (specified in ConvertFromTrac.sh)
     # In case of a working trac.db:
     python ~/repositories/github.com/Nukama/scripts/trac2gitsync.py
     
-    # Only with a Trac2Git repository:
+    # Only with a Trac2Gitsync repository:
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-RemoveTracFiles.sh
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-ConvertFromTrac.sh
     
@@ -30,6 +34,9 @@ Then convert repository to desired format (specified in ConvertFromTrac.sh)
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-git-author-committer-name-email-case.sh
     # Or:
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-git-check-mailmap.sh
+    
+    # Apply FormatMatter for jekyll:
+    ~/repositories/github.com/Nukama/scripts/git-filter-branch-FormatMatter.sh
     
     # Then push to a remote repository:
     git remote set-url origin git@github.com:USERNAME/USERNAME.wiki.qubes-os.org.git
@@ -44,6 +51,14 @@ and push to it.
     git remote -v
     git remote add-url wiki git@github.com:USERNAME/USERNAME.github.io.wiki.git
     git push -f wiki GFM:master
+
+ToDo
+----
+
+- Rename Files in folder to Dirname-Filename
+- Fix links
+- Fix tables
+- Fix formatting
 
 __ https://github.com/Nukama/scripts/blob/master/.mailmap
 __ https://github.com/Nukama/scripts/blob/master/git-filter-branch-git-check-mailmap.sh
