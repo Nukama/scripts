@@ -31,12 +31,20 @@ Then convert repository to desired format (specified in ConvertFromTrac.sh)
     # Or:
     ~/repositories/github.com/Nukama/scripts/git-filter-branch-git-check-mailmap.sh
     
-    # Then push to remote repository:
-    git remote set-url origin git@github.com:USERNAME/USERNAME.github.io.wiki.git
+    # Then push to a remote repository:
+    git remote set-url origin git@github.com:USERNAME/USERNAME.wiki.qubes-os.org.git
     # Or:
-    git remote add-url origin git@github.com:USERNAME/USERNAME.github.io.wiki.git
+    git remote add-url wiki git@github.com:USERNAME/USERNAME.github.io.wiki.git
     git push -f
 
+If you have created several branches, you can checkout one of them, `add a remote`__ 
+and push to it.
+::
+
+    git remote -v
+    git remote add-url wiki git@github.com:USERNAME/USERNAME.github.io.wiki.git
+    git push -f wiki GFM:master
 
 __ https://github.com/Nukama/scripts/blob/master/.mailmap
 __ https://github.com/Nukama/scripts/blob/master/git-filter-branch-git-check-mailmap.sh
+__ https://help.github.com/articles/adding-a-remote/
