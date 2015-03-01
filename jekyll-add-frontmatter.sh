@@ -10,7 +10,8 @@ filepath=`rev <<< "$1" | cut -d"." -f2- | rev | sed -e "s|\.\/||g"`
 
 echo \
 "---
+layout: "wiki"
 title: "$title"
-permalink: /wiki/$filepath
+permalink: "/wiki/$filepath/"
 ---
 " | cat - $1
