@@ -13,6 +13,6 @@ echo \
 layout: "doc"
 title: "$title"
 permalink: "/doc/$filepath/"
-redirect-from: "/wiki/$filepath/"
+redirect_from: "/wiki/$filepath/"
 ---
 " | cat - $1

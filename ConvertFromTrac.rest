@@ -58,7 +58,7 @@ ToDo
 - rename WikiStart to home
 - Rename Files with foldername.md to foldername-home.md and move into folder 
   (before running FormatMatter.sh) correct links.
-- Fix links
+- Fix links (add trailing / for every directory link)
 - Fix tables
 - Fix formatting
 
